@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台資料表格</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-8 bg-gray-100">
+    <div id="app" class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">工號後台管理</h2>
+        
+        <!-- 新增資料卡片 -->
+        <div class="mb-6 p-4 bg-white shadow rounded-lg">
+            <h3 class="text-lg font-semibold mb-2">新增資料</h3>
+            <div class="grid grid-cols-5 gap-4">
+                <input v-model="newEntry.id" type="text" placeholder="功號" class="border p-2 rounded">
+                <input v-model="newEntry.name" type="text" placeholder="姓名" class="border p-2 rounded">
+                <input v-model="newEntry.email" type="text" placeholder="Email" class="border p-2 rounded">
+                <input v-model="newEntry.department" type="text" placeholder="部門" class="border p-2 rounded">
+                <button @click="addEntry" class="bg-blue-500 text-white px-4 py-2 rounded">新增</button>
+            </div>
+        </div>
+        
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">功號</th>
+                    <th class="border p-2">姓名</th>
+                    <th class="border p-2">Email</th>
+                    <th class="border p-2">部門</th>
+                    <th class="border p-2">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in backendData" :key="index" class="border">
+                    <td class="border p-2">{{ item.id }}</td>
+                    <td class="border p-2">{{ item.name }}</td>
+                    <td class="border p-2">{{ item.email }}</td>
+                    <td class="border p-2">{{ item.department }}</td>
+                    <td class="border p-2">
+                        <button @click="deleteBackendItem(index)" class="px-3 py-1 bg-red-500 text-white rounded">刪除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    backendData: [
+                        { id: 'A001', name: '王小明', email: 'xiaoming@example.com', department: '財務部' },
+                        { id: 'A002', name: '李小華', email: 'xiaohua@example.com', department: '人事部' },
+                        { id: 'A003', name: '張大山', email: 'dashan@example.com', department: '工程部' }
+                    ],
+                    newEntry: { id: '', name: '', email: '', department: '' }
+                };
+            },
+            methods: {
+                deleteBackendItem(index) {
+                    this.backendData.splice(index, 1);
+                },
+                addEntry() {
+                    if (this.newEntry.id && this.newEntry.name && this.newEntry.email && this.newEntry.department) {
+                        this.backendData.push({ ...this.newEntry });
+                        this.newEntry = { id: '', name: '', email: '', department: '' };
+                    } else {
+                        alert("請填寫完整資料");
+                    }
+                }
+            }
+        });
+        
+        app.mount('#app');
+    </script>
+</body>
+</html>

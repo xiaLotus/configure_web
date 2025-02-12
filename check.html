@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台資料表格（只允許刪除）</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-8 bg-gray-100">
+    <div id="app" class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">後台資料表格（只允許刪除）</h2>
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">部門</th>
+                    <th class="border p-2">功號</th>
+                    <th class="border p-2">詳細問題</th>
+                    <th class="border p-2">其他</th>
+                    <th class="border p-2">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in backendData" :key="index" class="border">
+                    <td class="border p-2">{{ item.department }}</td>
+                    <td class="border p-2">{{ item.id }}</td>
+                    <td class="border p-2">{{ item.issue }}</td>
+                    <td class="border p-2">
+                        <button @click="showDetails(item)" class="px-3 py-1 bg-blue-500 text-white rounded">其他</button>
+                    </td>
+                    <td class="border p-2">
+                        <button @click="deleteBackendItem(index)" class="px-3 py-1 bg-red-500 text-white rounded">刪除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- 詳細資料卡片 -->
+        <div v-if="selectedItem" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 border border-gray-300">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">詳細資訊</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <p><strong class="text-gray-600">部門:</strong> {{ selectedItem.department }}</p>
+                    <p><strong class="text-gray-600">功號:</strong> {{ selectedItem.id }}</p>
+                    <p><strong class="text-gray-600">姓名:</strong> {{ selectedItem.name }}</p>
+                    <p><strong class="text-gray-600">Email:</strong> <a :href="'mailto:' + selectedItem.email" class="text-blue-500 hover:underline">{{ selectedItem.email }}</a></p>
+                    <p class="col-span-2"><strong class="text-gray-600">詳細問題:</strong> {{ selectedItem.issue }}</p>
+                </div>
+                <div class="mt-6 text-right">
+                    <button @click="selectedItem = null" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    backendData: [
+                        { id: 'A001', name: '王小明', email: 'xiaoming@example.com', department: '財務部', issue: '系統無法登入' },
+                        { id: 'A002', name: '李小華', email: 'xiaohua@example.com', department: '人事部', issue: '無法提交表單' },
+                        { id: 'A003', name: '張大山', email: 'dashan@example.com', department: '工程部', issue: '伺服器異常' }
+                    ],
+                    selectedItem: null
+                };
+            },
+            methods: {
+                deleteBackendItem(index) {
+                    this.backendData.splice(index, 1);
+                },
+                showDetails(item) {
+                    this.selectedItem = item;
+                }
+            }
+        });
+        
+        app.mount('#app');
+    </script>
+</body>
+</html>
